@@ -1,0 +1,24 @@
+{
+  "hex_pre_byte": "",
+  "combined_work_load_count": false,
+  "payloads":[
+    {
+      "command_name": "On",
+      "description": "Turns light on",
+      "configurable": false,
+      "hex_code": "00001111"
+    },
+    {
+      "command_name": "Dim",
+      "description": "To dim light",
+      "configurable": false,
+      "hex_code": "00001010"
+    },
+    {
+      "command_name": "Off",
+      "description": "Turns light off",
+      "configurable": false,
+      "hex_code": "00000000"
+    }
+  ]
+}

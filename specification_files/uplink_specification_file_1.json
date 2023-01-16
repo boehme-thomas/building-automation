@@ -1,0 +1,9 @@
+{
+  "payloads": [
+    "co2",
+    "humidity",
+    "light",
+    "temperature",
+    "vdd"
+  ]
+}
