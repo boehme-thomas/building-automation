@@ -1027,6 +1027,7 @@ dependencies = [
 [[package]]
 name = "rubalosim"
 version = "0.1.1"
+source = "git+https://github.com/boehme-thomas/rubalosim#6587a4786e8c6874c18a191b230d3cefc15b5c71"
 dependencies = [
  "chirpstack_api",
  "chrono",

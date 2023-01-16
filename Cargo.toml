@@ -10,4 +10,4 @@ petgraph = "0.6.2"
 rand = "0.8.5"
 chrono = "0.4.23"
 elorapi = {git = "https://github.com/boehme-thomas/elorapi", version="0.1.2"}
-rubalosim = {path = "../boehme-thomas/rubalosim"}
+rubalosim = {git = "https://github.com/boehme-thomas/rubalosim", version="0.1.1"}

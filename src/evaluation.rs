@@ -20,9 +20,6 @@ impl Evaluation {
         let mut energy_consumption_sub_rooms_average = 0.0;
         let mut energy_consumption_rooms_average = 0.0;
 
-        let mut energy_consumption_sensor_type0 = 0.0;
-        let mut energy_consumption_sensor_type1 = 0.0;
-
         let mut vec_consumption_per_room:Vec<(String, f64)>= Vec::new();
 
         let mut vec_consumption_per_sub_room:Vec<(String, f64)>= Vec::new();
@@ -136,8 +133,8 @@ impl Evaluation {
 
         let number_of_sensors = (vec_consumption_per_sub_room.len() + vec_consumption_per_room.len()) as f64;
 
-        energy_consumption_sensor_type0 = length /60.0 /60.0/1000.0 * self.energy_consumption_sensor_type[0] * number_of_sensors;
-        energy_consumption_sensor_type1 = length /60.0 /60.0/1000.0 * self.energy_consumption_sensor_type[1] * (2.0 * number_of_sensors);
+        let energy_consumption_sensor_type0 = length /60.0 /60.0/1000.0 * self.energy_consumption_sensor_type[0] * number_of_sensors;
+        let energy_consumption_sensor_type1 = length /60.0 /60.0/1000.0 * self.energy_consumption_sensor_type[1] * (2.0 * number_of_sensors);
 
         let date = Local::now();
         let path = path + "Energy_evaluation_" + date.date_naive().to_string().as_str() + "_" + date.time().hour().to_string().as_str() + "_" + date.time().minute().to_string().as_str() + "_" +date.time().second().to_string().as_str() + ".txt";
