@@ -131,6 +131,7 @@ fn create_rules(parameters: &mut Parameters) {
     let mut rule_3 = 0;
     let mut rule_4 = 0;
     let mut rule_5 = 0;
+    let mut rule_6 = 0;
 
     for index in node_indices {
         let node = underlying_structure.get_graph_structure().index(index);
@@ -149,6 +150,8 @@ fn create_rules(parameters: &mut Parameters) {
             };
         }
         if !sensors_id_type_3.is_empty() & !sensors_id_type_2.is_empty() {
+            /* This is for the execution with 4 rules, comment this out when executing with 5 rules!!!
+
             let mut type_3_sensor_measures_occupancy_conditions = Vec::<Condition>::new();
             for sensor_id_type_3 in &sensors_id_type_3 {
                     type_3_sensor_measures_occupancy_conditions.push(Condition::Device(Rule::create_device_condition(sensor_id_type_3.0.clone(), sensor_id_type_3.1.clone(),  0, "==".to_string(), RefValue::String("true".to_string()))));
@@ -170,7 +173,7 @@ fn create_rules(parameters: &mut Parameters) {
             let turn_lights_on_when_arriving_rule = Rule::create_rule("Turn_lights_on_when_arriving_rule_node_".to_owned() + node_id.as_str(), type_3_sensor_measures_occupancy_conditions, bool_ops, type_2_sensor_turn_lights_on_actions);
             rules.push(turn_lights_on_when_arriving_rule);
             rule_1 += 1;
-
+            */
             if node_id.contains(&"_sub".to_string()) {
                 let mut type_3_sensor_measures_no_occupancy_conditions = Vec::<Condition>::new();
                 for sensor_id_type_3 in &sensors_id_type_3 {
@@ -194,7 +197,7 @@ fn create_rules(parameters: &mut Parameters) {
                 rules.push(turn_lights_off_when_leaving_rule);
                 rule_2 += 1;
 
-                /*
+                // comment this to line 228 out when executing with 4 rules!!!!
                 // turn lights only on when its in between 16 and 10
                 let mut type_3_sensor_measures_occupancy_conditions_on_sub = Vec::<Condition>::new();
                 for sensor_id_type_3 in &sensors_id_type_3 {
@@ -220,10 +223,9 @@ fn create_rules(parameters: &mut Parameters) {
 
                 bool_ops.push("&".to_string());
 
-                let turn_lights_on_when_arriving_rule_sub = Rule::create_rule("Turn_lights_on_when_arriving_rule_node_".to_owned() + node_id.as_str(), type_3_sensor_measures_occupancy_conditions_on_sub, bool_ops, type_2_sensor_turn_lights_on_actions);
+                let turn_lights_on_when_arriving_rule_sub = Rule::create_rule("Turn_lights_on_when_arriving_rule_node_sub_+_time".to_owned() + node_id.as_str(), type_3_sensor_measures_occupancy_conditions_on_sub, bool_ops, type_2_sensor_turn_lights_on_actions);
                 rules.push(turn_lights_on_when_arriving_rule_sub);
-                rule_5
-                 += 1;*/
+                rule_5 += 1;
 
             } else {
                 let mut type_3_sensor_measures_no_occupancy_conditions = Vec::<Condition>::new();
@@ -278,6 +280,31 @@ fn create_rules(parameters: &mut Parameters) {
                 rules.push(turn_lights_off_when_leaving_rule_with_time_condition);
 
                 rule_4 += 1;
+
+
+                // comment this out when executing with 4 rules
+                let mut type_3_sensor_measures_occupancy_conditions_always_on = Vec::<Condition>::new();
+                for sensor_id_type_3 in &sensors_id_type_3 {
+                    type_3_sensor_measures_occupancy_conditions_always_on.push(Condition::Device(Rule::create_device_condition(sensor_id_type_3.0.clone(), sensor_id_type_3.1.clone(),  0, "==".to_string(), RefValue::String("true".to_string()))));
+                }
+                let mut type_2_sensor_turn_lights_on_actions_always = Vec::<Action>::new();
+                for sensor_id_type_2 in &sensors_id_type_2 {
+                    type_2_sensor_turn_lights_on_actions_always.push(Rule::create_device_action(sensor_id_type_2.0.clone(),sensor_id_type_2.1.clone(), vec![0]));
+                }
+                let mut bool_ops = Vec::<String>::new();
+
+                let len = sensors_id_type_3.len();
+
+                if len > 1 {
+                    for _ in 0..len-1 {
+                        bool_ops.push("|".to_string());
+                    }
+                }
+
+                let turn_lights_on_when_arriving_rule_always = Rule::create_rule("Turn_lights_on_when_arriving_rule_node_always".to_owned() + node_id.as_str(), type_3_sensor_measures_occupancy_conditions_always_on, bool_ops, type_2_sensor_turn_lights_on_actions_always);
+                rules.push(turn_lights_on_when_arriving_rule_always);
+                rule_6 += 1;
+
             }
         }
     }
@@ -285,6 +312,8 @@ fn create_rules(parameters: &mut Parameters) {
     println!("rule_2:{}",rule_2);
     println!("rule_3:{}",rule_3);
     println!("rule_4:{}",rule_4);
+    println!("rule_5:{}",rule_5);
+    println!("rule_6:{}",rule_6);
     parameters.set_rule(rules);
 }
 

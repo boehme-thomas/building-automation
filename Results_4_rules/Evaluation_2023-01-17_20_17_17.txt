@@ -1,0 +1,17 @@
+Start of the simulation: 2023-01-17 19:48:22.321960600 +01:00
+End of the simulation: 2023-01-17 20:17:17.354451300 +01:00
+Length of simulation: 1735.032490700 sec
+
+Start of rule execution: 2023-01-17 19:48:46.569012500 +01:00
+End of rule execution: 2023-01-17 20:17:17.343216600 +01:00
+Length of rule execution: 1710.774204100 sec
+
+Length of event list: 64729
+
+Number of messages: 61355
+Number of uplink messages: 42482
+Number of downlink messages: 18873
+
+Number of downlink and uplink messages per sensor type:
+	 Sensor type 0: 4730 uplink messages, 18873 downlink_messages,
+	 Sensor type 1: 37752 uplink messages, 0 downlink_messages,
