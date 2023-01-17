@@ -4,7 +4,9 @@ use chrono::{Local, Timelike};
 use rubalosim::simulator::event::{EventList, Events};
 
 pub struct Evaluation {
+    // as Wh per year
     energy_consumption_sensor_type: Vec<f64>,
+    // as Watt
     energy_consumption_light_in_different_states_of_different_rooms: Vec<Vec<f64>>,
 }
 
@@ -71,13 +73,13 @@ impl Evaluation {
                         if message_id.contains("sub") {
                             let result:f64 = match action_message.as_str() {
                                 "On" => {
-                                    duration as f64 / 60.0 / 60.0 / 1000.0 * self.energy_consumption_light_in_different_states_of_different_rooms[0][0]
+                                    duration as f64 / 1000.0 * self.energy_consumption_light_in_different_states_of_different_rooms[0][0]
                                 },
                                 "Dim" => {
-                                    duration as f64 / 60.0 / 60.0 / 1000.0 * self.energy_consumption_light_in_different_states_of_different_rooms[0][1]
+                                    duration as f64 / 1000.0 * self.energy_consumption_light_in_different_states_of_different_rooms[0][1]
                                 },
                                 "Off" => {
-                                    duration as f64 / 60.0 / 60.0 / 1000.0 * self.energy_consumption_light_in_different_states_of_different_rooms[0][2]
+                                    duration as f64 / 1000.0 * self.energy_consumption_light_in_different_states_of_different_rooms[0][2]
                                 },
                                 _=> {
                                     0.0
@@ -98,13 +100,13 @@ impl Evaluation {
                         } else {
                             let result:f64 = match action_message.as_str() {
                                 "On" => {
-                                    duration as f64 / 60.0 / 60.0 / 1000.0 * self.energy_consumption_light_in_different_states_of_different_rooms[1][0]
+                                    duration as f64 / 1000.0 * self.energy_consumption_light_in_different_states_of_different_rooms[1][0]
                                 },
                                 "Dim" => {
-                                    duration as f64 / 60.0 / 60.0 / 1000.0 * self.energy_consumption_light_in_different_states_of_different_rooms[1][1]
+                                    duration as f64 / 1000.0 * self.energy_consumption_light_in_different_states_of_different_rooms[1][1]
                                 },
                                 "Off" => {
-                                    duration as f64 / 60.0 / 60.0 / 1000.0 * self.energy_consumption_light_in_different_states_of_different_rooms[1][2]
+                                    duration as f64 / 1000.0 * self.energy_consumption_light_in_different_states_of_different_rooms[1][2]
                                 },
                                 _ => 0.0
                             };
@@ -128,13 +130,13 @@ impl Evaluation {
 
             }
         }
-        energy_consumption_sub_rooms_average = energy_consumption_sub_rooms_average / vec_consumption_per_sub_room.len() as f64;
-        energy_consumption_rooms_average = energy_consumption_rooms_average / vec_consumption_per_room.len() as f64;
+        energy_consumption_sub_rooms_average = (energy_consumption_sub_rooms_average / vec_consumption_per_sub_room.len() as f64) / 60.0 / 60.0;
+        energy_consumption_rooms_average = (energy_consumption_rooms_average / vec_consumption_per_room.len() as f64) / 60.0 / 60.0;
 
         let number_of_sensors = (vec_consumption_per_sub_room.len() + vec_consumption_per_room.len()) as f64;
 
-        let energy_consumption_sensor_type0 = length /60.0 /60.0/1000.0 * self.energy_consumption_sensor_type[0] * number_of_sensors;
-        let energy_consumption_sensor_type1 = length /60.0 /60.0/1000.0 * self.energy_consumption_sensor_type[1] * (2.0 * number_of_sensors);
+        let energy_consumption_sensor_type0 = self.energy_consumption_sensor_type[0] * number_of_sensors / 365.0;
+        let energy_consumption_sensor_type1 = self.energy_consumption_sensor_type[1] * 2.0 * number_of_sensors / 365.0;
 
         let date = Local::now();
         let path = path + "Energy_evaluation_" + date.date_naive().to_string().as_str() + "_" + date.time().hour().to_string().as_str() + "_" + date.time().minute().to_string().as_str() + "_" +date.time().second().to_string().as_str() + ".txt";
@@ -143,30 +145,32 @@ impl Evaluation {
             .create(true)
             .open(path).unwrap();
 
-        let data = "Energy consumption of all sensors of type 0: ".to_owned() + energy_consumption_sensor_type0.to_string().as_str() + "\n";
+        let data = "Energy consumption of all sensors of type 0 in Wh: ".to_owned() + energy_consumption_sensor_type0.to_string().as_str() + "\n";
         f.write(data.as_bytes()).unwrap();
 
-        let data = "Energy consumption of all sensors of type 1: ".to_owned() + energy_consumption_sensor_type1.to_string().as_str() + "\n";
+        let data = "Energy consumption of all sensors of type 1 in Wh: ".to_owned() + energy_consumption_sensor_type1.to_string().as_str() + "\n";
         f.write(data.as_bytes()).unwrap();
 
 
-        let data = "Average energy consumption of rooms: ".to_owned() + energy_consumption_rooms_average.to_string().as_str() + "\n";
+        let data = "Average energy consumption of rooms in Wh: ".to_owned() + energy_consumption_rooms_average.to_string().as_str() + "\n";
         f.write(data.as_bytes()).unwrap();
 
-        let data = "Average energy consumption of sub rooms: ".to_owned() + energy_consumption_sub_rooms_average.to_string().as_str() + "\n\n";
+        let data = "Average energy consumption of sub rooms in Wh: ".to_owned() + energy_consumption_sub_rooms_average.to_string().as_str() + "\n\n";
         f.write(data.as_bytes()).unwrap();
 
-        let data = "Energy consumption per room: ";
+        let data = "Energy consumption per room in Wh: ";
         f.write(data.as_bytes()).unwrap();
         for value in vec_consumption_per_room {
-            let data = "\n\t".to_owned() + value.0.as_str() + ": " + value.1.to_string().as_str();
+            let wh = value.1 / 60.0 / 60.0;
+            let data = "\n\t".to_owned() + value.0.as_str() + ": " + wh.to_string().as_str();
             f.write(data.as_bytes()).unwrap();
         }
 
-        let data = "\n\nEnergy consumption per sub room: ";
+        let data = "\n\nEnergy consumption per sub room in Wh: ";
         f.write(data.as_bytes()).unwrap();
         for value in vec_consumption_per_sub_room {
-            let data = "\n\t".to_owned() + value.0.as_str() + ": " + value.1.to_string().as_str();
+            let wh = value.1 / 60.0 / 60.0;
+            let data = "\n\t".to_owned() + value.0.as_str() + ": " + wh.to_string().as_str();
             f.write(data.as_bytes()).unwrap();
         }
 

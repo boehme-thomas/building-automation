@@ -401,7 +401,7 @@ fn main() {
     //simulation.write_events_downlink_message("./".to_string()).unwrap();
     //simulation.write_events_of_movable_object("./".to_string(), "Movable_object_".to_string()).unwrap();
     let event_list = simulation.ending_simulation("./".to_string());
-    let mut evaluation = Evaluation::new(vec![1.0, 1.0], vec![vec![45.0, 0.0, 0.0], vec![40.0, 20.0, 0.0]]);
+    let mut evaluation = Evaluation::new(vec![10.0, 3.0], vec![vec![406.0, 0.0, 0.0], vec![1740.0, 870.0, 0.0]]);
     evaluation.calculate_and_write_consumption(event_list, "./".to_string());
     simulation.write_event_list("./".to_string()).unwrap();
 }
